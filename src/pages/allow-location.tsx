@@ -28,7 +28,7 @@ export function AllowLocation() {
           </div>
         </div>
         <div>
-          <button className="bg-black p-2.5 rounded text-2xl text-white w-full">
+          <button className="bg-black-olive p-2.5 rounded-full text-2xl text-white w-full">
             Allow Location
           </button>
         </div>
