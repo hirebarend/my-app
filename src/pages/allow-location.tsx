@@ -1,10 +1,10 @@
 export function AllowLocation() {
   return (
     <div>
-      <div className="bg-slate-50 background-image-map" style={{ height: "60vh" }}></div>
+      <div className="bg-slate-50 background-image-map" style={{ height: "calc(60vh - 2rem)" }}></div>
       <div
         className="flex flex-col justify-between p-5"
-        style={{ height: "40vh" }}
+        style={{ height: "calc(40vh - 2rem)" }}
       >
         <div>
           <div className="grid justify-items-center mb-8">
