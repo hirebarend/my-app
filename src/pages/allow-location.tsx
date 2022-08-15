@@ -7,7 +7,7 @@ export function AllowLocation() {
         style={{ height: "40vh" }}
       >
         <div>
-          <div className="grid justify-items-center mb-5">
+          <div className="grid justify-items-center mb-8">
             <img
               alt="Location Icon"
               src="/images/location-icon.svg"
