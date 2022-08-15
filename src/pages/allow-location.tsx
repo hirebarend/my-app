@@ -18,7 +18,7 @@ export function AllowLocation() {
             />
           </div>
           <div className="font-medium text-center text-xl">
-            We need your permisssion to access your location
+            We need your permission to access your location
           </div>
         </div>
         <div>
