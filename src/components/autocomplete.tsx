@@ -42,11 +42,10 @@ export function Autocomplete(props: {
     abortController: null as AbortController | null,
     isFocused: false,
     items: [] as Array<string>,
-    value: props.value,
   });
 
   useEffect(() => {
-    if (state.isFocused && state.value.length > 3) {
+    if (state.isFocused && props.value.length > 3) {
       if (state.abortController) {
         state.abortController.abort();
       }
@@ -65,7 +64,7 @@ export function Autocomplete(props: {
         });
 
         timeout = setTimeout(async () => {
-          const items = await props.loadAsync(state.value);
+          const items = await props.loadAsync(props.value);
 
           resolve(items);
         }, 500);
@@ -96,7 +95,7 @@ export function Autocomplete(props: {
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props, state.value]);
+  }, [props]);
 
   return (
     <div ref={mutableObjectRef}>
@@ -104,14 +103,7 @@ export function Autocomplete(props: {
         className={`appearance-none bg-slate-50 focus:outline-none px-4 py-2 ${
           state.items.length ? "rounded-t-lg" : "rounded-lg"
         } text-black w-full`}
-        onChange={(event) =>
-          setState((state) => {
-            return {
-              ...state,
-              value: event.target.value,
-            };
-          })
-        }
+        onChange={(event) => props.onChange(event.target.value)}
         onFocus={() =>
           setState((state) => {
             return {
@@ -121,7 +113,7 @@ export function Autocomplete(props: {
           })
         }
         placeholder="Enter your address"
-        value={state.value}
+        value={props.value}
       />
       {state.items.length ? (
         <div className="bg-white shadow">
@@ -133,8 +125,9 @@ export function Autocomplete(props: {
                   abortController: null,
                   isFocused: false,
                   items: [],
-                  value: x,
                 });
+
+                props.onChange(x);
               }}
               key={x}
             >
