@@ -1,5 +1,29 @@
 import React, { MutableRefObject, useEffect, useRef, useState } from "react";
 
+function createDelayedPromise<T>(
+  fn: () => Promise<T>,
+  milliseconds: number,
+  abortController: AbortController | null = null
+): Promise<T> {
+  return new Promise((resolve: (value: T) => void, reject) => {
+    let timeout: NodeJS.Timeout | null = null;
+
+    if (abortController) {
+      abortController.signal.addEventListener("abort", () => {
+        if (timeout) {
+          clearTimeout(timeout);
+        }
+
+        reject(new Error("abort"));
+      });
+    }
+
+    timeout = setTimeout(() => {
+      fn().then(resolve).catch(reject);
+    }, milliseconds);
+  });
+}
+
 function useOutsideAlerter(
   mutableObjectRef: MutableRefObject<any>,
   fn: () => void
@@ -52,23 +76,11 @@ export function Autocomplete(props: {
 
       const abortController: AbortController = new AbortController();
 
-      new Promise((resolve: (value: Array<string>) => void, reject) => {
-        let timeout: any = undefined;
-
-        abortController.signal.addEventListener("abort", () => {
-          if (timeout) {
-            clearTimeout(timeout);
-          }
-
-          reject();
-        });
-
-        timeout = setTimeout(async () => {
-          const items = await props.loadAsync(props.value);
-
-          resolve(items);
-        }, 500);
-      })
+      createDelayedPromise(
+        () => props.loadAsync(props.value),
+        500,
+        abortController
+      )
         .then((items: Array<string>) =>
           setState((state) => {
             return {
