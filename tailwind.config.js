@@ -6,6 +6,7 @@ module.exports = {
       colors: {
         "black-olive": "#3B3B3B",
         malachite: "#00D555",
+        "rosso-corsa": "#d60d00",
       },
     },
     fontFamily: {
