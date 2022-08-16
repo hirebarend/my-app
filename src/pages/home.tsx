@@ -4,43 +4,87 @@ import {
   faCircleXmark,
 } from "@fortawesome/free-solid-svg-icons";
 
+const coordinates = [-33.9088359, 18.4072053];
+
 const items = [
   {
-    address: "2A Rontree Ave, Bakoven, Cape Town, 8005",
-    inStock: false,
-    name: "Caltex",
-  },
-  {
-    address: "110 Regent Rd, Sea Point, Cape Town, 8060",
+    address: "4 Somerset Rd, Green Point",
+    coordinates: [-33.9144383, 18.4177846],
     inStock: true,
     name: "BP",
   },
   {
-    address: "Main Rd, Sea Point, Cape Town, 8005",
-    inStock: true,
+    address: "5 Somerset Rd, De Waterkant",
+    coordinates: [-33.9165503, 18.4185717],
+    inStock: false,
+    name: "Caltex",
+  },
+  {
+    address: "81 Church St, Cape Town City Centre",
+    coordinates: [-33.9239185, 18.4199813],
+    inStock: false,
     name: "Shell",
   },
   {
-    address: "345 Main Rd, Sea Point, Cape Town, 8005",
+    address: "1 Orange Street, Cape Town City Centre",
+    coordinates: [-33.9271299, 18.4137947],
+    inStock: false,
+    name: "Shell",
+  },
+  {
+    address: "2A Rontree Ave, Bakoven",
+    coordinates: [-33.96346, 18.37976],
+    inStock: false,
+    name: "Caltex",
+  },
+  {
+    address: "110 Regent Rd, Sea Point",
+    coordinates: [-33.92233, 18.3806],
+    inStock: true,
+    name: "BP",
+  },
+  {
+    address: "166 Main Rd, Sea Point",
+    coordinates: [-33.91625, 18.38917],
+    inStock: false,
+    name: "Shell",
+  },
+  {
+    address: "345 Main Rd, Sea Point",
+    coordinates: [-33.9146, 18.39111],
     inStock: true,
     name: "TotalEnergies",
   },
   {
-    address: "134 Main Rd, Sea Point, Cape Town, 8005",
+    address: "134 Main Rd, Sea Point",
+    coordinates: [-33.91356, 18.39141],
     inStock: false,
     name: "Engen",
   },
   {
-    address: "114 Main Rd, Sea Point, Cape Town, 8005",
+    address: "114 Main Rd, Sea Point",
+    coordinates: [-33.9120329, 18.392735],
     inStock: true,
     name: "Caltex",
   },
   {
-    address: "Beach Rd, Mouille Point, Cape Town, 8005",
+    address: "179 Beach Rd, Mouille Point",
+    coordinates: [-33.8994917, 18.4106603],
     inStock: true,
     name: "Shell",
   },
-];
+].sort((a, b) => {
+  return (
+    haversine(coordinates, a.coordinates) -
+    haversine(coordinates, b.coordinates)
+  );
+});
+
+// for (const item of items) {
+//   console.log(
+//     `${item.address} ---> ${haversine(coordinates, item.coordinates)}`
+//   );
+// }
 
 const array = chunks(items, 2);
 
@@ -52,6 +96,11 @@ export function Home() {
         className="appearance-none bg-slate-50 focus:outline-none px-4 py-2 rounded-full text-black w-full"
         placeholder="Enter your address"
       />
+
+      <div className="font-medium mt-4 text-base">
+        Found {items.length} filling stations within 10km of 37 Hely Hutchinson
+        Avenue, Bakoven
+      </div>
 
       {array?.map((x, index1) => (
         <div className="gap-4 grid grid-cols-2 mt-4" key={`index1-${index1}`}>
@@ -67,7 +116,7 @@ export function Home() {
                 style={{ height: "90px" }}
               ></div>
               <div className="font-medium mt-2 text-lg">{y.name}</div>
-              <div className="text-sm text-gray-500" style={{ height: "75px" }}>
+              <div className="text-sm text-gray-500" style={{ height: "50px" }}>
                 {y.address}
               </div>
 
@@ -113,4 +162,26 @@ function chunks<T>(
 
     return array;
   }, [] as Array<Array<T>>);
+}
+
+function degreesToRadians(degrees: number): number {
+  return degrees * (Math.PI / 180);
+}
+
+function haversine(
+  coordinates1: Array<number>,
+  coordinates2: Array<number>
+): number {
+  var R = 6371; // Radius of the earth in km
+  var dLat = degreesToRadians(coordinates2[0] - coordinates1[0]); // deg2rad below
+  var dLon = degreesToRadians(coordinates2[1] - coordinates1[1]);
+  var a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(degreesToRadians(coordinates1[0])) *
+      Math.cos(degreesToRadians(coordinates2[0])) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  var d = R * c; // Distance in km
+  return d;
 }
