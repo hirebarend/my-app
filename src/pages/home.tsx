@@ -3,6 +3,8 @@ import {
   faCircleCheck,
   faCircleXmark,
 } from "@fortawesome/free-solid-svg-icons";
+import { Autocomplete } from "../components";
+import { useState } from "react";
 
 const coordinates = [-33.9088359, 18.4072053];
 
@@ -80,26 +82,30 @@ const items = [
   );
 });
 
-// for (const item of items) {
-//   console.log(
-//     `${item.address} ---> ${haversine(coordinates, item.coordinates)}`
-//   );
-// }
-
 const array = chunks(items, 2);
 
+async function loadAsync(value: string): Promise<Array<string>> {
+  console.log("loading...");
+  await new Promise((resolve) => setTimeout(resolve, 1000));
+
+  return [value];
+}
+
 export function Home() {
+  const [value, setValue] = useState("37 Hely Hutchinson Avenue, Bakoven");
+
   return (
     <div className="p-5">
       <div className="font-bold mb-4 text-4xl">Gas Find</div>
-      <input
-        className="appearance-none bg-slate-50 focus:outline-none px-4 py-2 rounded-full text-black w-full"
-        placeholder="Enter your address"
+
+      <Autocomplete
+        loadAsync={loadAsync}
+        onChange={(value: string) => setValue(value)}
+        value={value}
       />
 
       <div className="font-medium mt-4 text-base">
-        Found {items.length} filling stations within 10km of 37 Hely Hutchinson
-        Avenue, Bakoven
+        Found {items.length} filling stations within 10km of {value}
       </div>
 
       {array?.map((x, index1) => (
