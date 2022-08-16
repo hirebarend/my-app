@@ -5,7 +5,8 @@ import {
   faCircleXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { Autocomplete } from "../components";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createDelayedPromise } from "../functions";
 
 const coordinates = [-33.9088359, 18.4072053];
 
@@ -105,10 +106,68 @@ async function loadAsync(value: string): Promise<Array<string>> {
   return response.data.predictions.map((x) => x.description);
 }
 
+async function getLocation(
+  value: string
+): Promise<{ address: string; coordinates: Array<number> }> {
+  const response = await axios.post<{
+    results: Array<{ geometry: { location: { lat: number; lng: number } } }>;
+  }>("https://startup-55-function-app.azurewebsites.net/api/v1/cors", {
+    config: {
+      params: {
+        address: value,
+        key: "AIzaSyA6WNw8PYvsig9g-I0j6_tEuegSiPUZfuE",
+      },
+    },
+    method: "GET",
+    url: "https://maps.googleapis.com/maps/api/geocode/json",
+  });
+
+  return {
+    address: value,
+    coordinates: [
+      response.data.results[0].geometry.location.lat,
+      response.data.results[0].geometry.location.lng,
+    ],
+  };
+}
+
 export function Home() {
-  const [value, setValue] = useState(
-    "37 Hely Hutchinson Avenue, Bakoven, Cape Town, South Africa"
+  const [location, setLocation] = useState(
+    null as { address: string; coordinates: Array<number> } | null
   );
+
+  const [locationAbortController, setLocationAbortController] = useState(
+    null as AbortController | null
+  );
+
+  const [value, setValue] = useState("");
+
+  const handleOnChangeAutocomplete = (value: string) => {
+    if (locationAbortController) {
+      locationAbortController.abort();
+    }
+
+    setValue(value);
+
+    const abortController: AbortController = new AbortController();
+
+    createDelayedPromise(() => getLocation(value), 1000, abortController)
+      .then((location: { address: string; coordinates: Array<number> }) => {
+        setLocation(location);
+
+        setLocationAbortController(null);
+      })
+      .catch(() => {});
+
+    setLocationAbortController(abortController);
+  };
+
+  useEffect(() => {
+    handleOnChangeAutocomplete(
+      "37 Hely Hutchinson Avenue, Bakoven, Cape Town, South Africa"
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="p-5">
@@ -116,13 +175,16 @@ export function Home() {
 
       <Autocomplete
         loadAsync={loadAsync}
-        onChange={(value: string) => setValue(value)}
+        onChange={handleOnChangeAutocomplete}
         value={value}
       />
 
-      <div className="font-medium mt-4 text-base">
-        Found {items.length} filling stations within 10km of {value}
-      </div>
+      {location ? (
+        <div className="font-medium mt-4 text-base">
+          Found {items.length} filling stations within 10km of{" "}
+          {location.address}
+        </div>
+      ) : null}
 
       {array?.map((x, index1) => (
         <div className="gap-4 grid grid-cols-2 mt-4" key={`index1-${index1}`}>
