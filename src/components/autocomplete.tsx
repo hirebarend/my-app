@@ -1,5 +1,4 @@
 import React, { MutableRefObject, useEffect, useRef, useState } from "react";
-import { createDelayedPromise } from "../functions";
 
 function useOutsideAlerter(
   mutableObjectRef: MutableRefObject<any>,
@@ -40,41 +39,23 @@ export function Autocomplete(props: {
   });
 
   const [state, setState] = useState({
-    abortController: null as AbortController | null,
     isFocused: false,
     items: [] as Array<string>,
   });
 
   useEffect(() => {
     if (state.isFocused && props.value.length > 3) {
-      if (state.abortController) {
-        state.abortController.abort();
-      }
-
-      const abortController: AbortController = new AbortController();
-
-      createDelayedPromise(
-        () => props.loadAsync(props.value),
-        500,
-        abortController
-      )
+      props
+        .loadAsync(props.value)
         .then((items: Array<string>) =>
           setState((state) => {
             return {
               ...state,
-              abortController: null,
               items,
             };
           })
         )
         .catch(() => {});
-
-      setState((state) => {
-        return {
-          ...state,
-          abortController,
-        };
-      });
     } else {
       setState((state) => {
         return {
@@ -111,7 +92,6 @@ export function Autocomplete(props: {
               className="px-4 py-2"
               onClick={() => {
                 setState({
-                  abortController: null,
                   isFocused: false,
                   items: [],
                 });

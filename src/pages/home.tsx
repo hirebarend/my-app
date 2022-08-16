@@ -6,18 +6,16 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Autocomplete } from "../components";
 import { useEffect, useState } from "react";
-import { createAbortablePromise, createDelayedPromise } from "../functions";
+import { createDelayedPromise } from "../functions";
 import { findViewModel } from "../api";
 
-// const array = chunks(items, 2);
-
-async function loadAsync(value: string): Promise<Array<string>> {
+async function loadAsync(address: string): Promise<Array<string>> {
   const response = await axios.post<{
     predictions: Array<{ description: string }>;
   }>("https://startup-55-function-app.azurewebsites.net/api/v1/cors", {
     config: {
       params: {
-        input: value,
+        input: address,
         key: "AIzaSyA6WNw8PYvsig9g-I0j6_tEuegSiPUZfuE",
         location: "-33.9142688,18.0956051",
         radius: "50000",
@@ -41,14 +39,31 @@ const createFindViewModelFn = () => {
 
     abortController = new AbortController();
 
-    return await createAbortablePromise(
-      () => createDelayedPromise(() => findViewModel(address), 500),
+    return await createDelayedPromise(
+      () => findViewModel(address),
+      1000,
       abortController
     );
   };
 };
 
 const findViewModelFn = createFindViewModelFn();
+
+const createLoadAsyncFn = () => {
+  let abortController: AbortController | null = null;
+
+  return async (address: string) => {
+    if (abortController) {
+      abortController.abort();
+    }
+
+    abortController = new AbortController();
+
+    return await createDelayedPromise(() => loadAsync(address), 1000);
+  };
+};
+
+const loadAsyncFn = createLoadAsyncFn();
 
 export function Home() {
   const [viewModel, setViewModel] = useState(
@@ -89,7 +104,7 @@ export function Home() {
       <div className="font-bold mb-4 text-4xl">Gas Find</div>
 
       <Autocomplete
-        loadAsync={loadAsync}
+        loadAsync={loadAsyncFn}
         onChange={handleOnChangeAutocomplete}
         value={value}
       />
