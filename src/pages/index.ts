@@ -1,1 +1,1 @@
-export * from "./allow-location";
+export * from "./home";
