@@ -6,85 +6,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Autocomplete } from "../components";
 import { useEffect, useState } from "react";
-import { createDelayedPromise } from "../functions";
+import { createAbortablePromise, createDelayedPromise } from "../functions";
+import { findViewModel } from "../api";
 
-const coordinates = [-33.9088359, 18.4072053];
-
-const items = [
-  {
-    address: "4 Somerset Rd, Green Point",
-    coordinates: [-33.9144383, 18.4177846],
-    inStock: true,
-    name: "BP",
-  },
-  {
-    address: "5 Somerset Rd, De Waterkant",
-    coordinates: [-33.9165503, 18.4185717],
-    inStock: false,
-    name: "Caltex",
-  },
-  {
-    address: "81 Church St, Cape Town City Centre",
-    coordinates: [-33.9239185, 18.4199813],
-    inStock: false,
-    name: "Shell",
-  },
-  {
-    address: "1 Orange Street, Cape Town City Centre",
-    coordinates: [-33.9271299, 18.4137947],
-    inStock: false,
-    name: "Shell",
-  },
-  {
-    address: "2A Rontree Ave, Bakoven",
-    coordinates: [-33.96346, 18.37976],
-    inStock: false,
-    name: "Caltex",
-  },
-  {
-    address: "110 Regent Rd, Sea Point",
-    coordinates: [-33.92233, 18.3806],
-    inStock: true,
-    name: "BP",
-  },
-  {
-    address: "166 Main Rd, Sea Point",
-    coordinates: [-33.91625, 18.38917],
-    inStock: false,
-    name: "Shell",
-  },
-  {
-    address: "345 Main Rd, Sea Point",
-    coordinates: [-33.9146, 18.39111],
-    inStock: true,
-    name: "TotalEnergies",
-  },
-  {
-    address: "134 Main Rd, Sea Point",
-    coordinates: [-33.91356, 18.39141],
-    inStock: false,
-    name: "Engen",
-  },
-  {
-    address: "114 Main Rd, Sea Point",
-    coordinates: [-33.9120329, 18.392735],
-    inStock: true,
-    name: "Caltex",
-  },
-  {
-    address: "179 Beach Rd, Mouille Point",
-    coordinates: [-33.8994917, 18.4106603],
-    inStock: true,
-    name: "Shell",
-  },
-].sort((a, b) => {
-  return (
-    haversine(coordinates, a.coordinates) -
-    haversine(coordinates, b.coordinates)
-  );
-});
-
-const array = chunks(items, 2);
+// const array = chunks(items, 2);
 
 async function loadAsync(value: string): Promise<Array<string>> {
   const response = await axios.post<{
@@ -106,65 +31,55 @@ async function loadAsync(value: string): Promise<Array<string>> {
   return response.data.predictions.map((x) => x.description);
 }
 
-async function getLocation(
-  value: string
-): Promise<{ address: string; coordinates: Array<number> }> {
-  const response = await axios.post<{
-    results: Array<{ geometry: { location: { lat: number; lng: number } } }>;
-  }>("https://startup-55-function-app.azurewebsites.net/api/v1/cors", {
-    config: {
-      params: {
-        address: value,
-        key: "AIzaSyA6WNw8PYvsig9g-I0j6_tEuegSiPUZfuE",
-      },
-    },
-    method: "GET",
-    url: "https://maps.googleapis.com/maps/api/geocode/json",
-  });
+const createFindViewModelFn = () => {
+  let abortController: AbortController | null = null;
 
-  return {
-    address: value,
-    coordinates: [
-      response.data.results[0].geometry.location.lat,
-      response.data.results[0].geometry.location.lng,
-    ],
+  return async (address: string) => {
+    if (abortController) {
+      abortController.abort();
+    }
+
+    abortController = new AbortController();
+
+    return await createAbortablePromise(
+      () => createDelayedPromise(() => findViewModel(address), 500),
+      abortController
+    );
   };
-}
+};
+
+const findViewModelFn = createFindViewModelFn();
 
 export function Home() {
-  const [location, setLocation] = useState(
-    null as { address: string; coordinates: Array<number> } | null
-  );
-
-  const [locationAbortController, setLocationAbortController] = useState(
-    null as AbortController | null
+  const [viewModel, setViewModel] = useState(
+    null as {
+      address: string;
+      coordinates: [number, number];
+      items: Array<{
+        address: string;
+        coordinates: [number, number];
+        inStock: boolean;
+        name: string;
+      }>;
+    } | null
   );
 
   const [value, setValue] = useState("");
 
-  const handleOnChangeAutocomplete = (value: string) => {
-    if (locationAbortController) {
-      locationAbortController.abort();
-    }
-
+  const handleOnChangeAutocomplete = (value: string, isSelection: boolean) => {
     setValue(value);
 
-    const abortController: AbortController = new AbortController();
-
-    createDelayedPromise(() => getLocation(value), 1000, abortController)
-      .then((location: { address: string; coordinates: Array<number> }) => {
-        setLocation(location);
-
-        setLocationAbortController(null);
-      })
-      .catch(() => {});
-
-    setLocationAbortController(abortController);
+    if (isSelection) {
+      findViewModelFn(value)
+        .then((x) => setViewModel(x))
+        .catch(() => {});
+    }
   };
 
   useEffect(() => {
     handleOnChangeAutocomplete(
-      "37 Hely Hutchinson Avenue, Bakoven, Cape Town, South Africa"
+      "37 Hely Hutchinson Avenue, Bakoven, Cape Town, South Africa",
+      true
     );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -179,14 +94,14 @@ export function Home() {
         value={value}
       />
 
-      {location ? (
+      {viewModel ? (
         <div className="font-medium mt-4 text-base">
-          Found {items.length} filling stations within 10km of{" "}
-          {location.address}
+          Found {viewModel.items.length} filling stations within 10km of{" "}
+          {viewModel.address}
         </div>
       ) : null}
 
-      {array?.map((x, index1) => (
+      {chunks(viewModel?.items || [], 2)?.map((x, index1) => (
         <div className="gap-4 grid grid-cols-2 mt-4" key={`index1-${index1}`}>
           {x.map((y, index2) => (
             <div key={`index2-${index2}`}>
@@ -246,26 +161,4 @@ function chunks<T>(
 
     return array;
   }, [] as Array<Array<T>>);
-}
-
-function degreesToRadians(degrees: number): number {
-  return degrees * (Math.PI / 180);
-}
-
-function haversine(
-  coordinates1: Array<number>,
-  coordinates2: Array<number>
-): number {
-  var R = 6371; // Radius of the earth in km
-  var dLat = degreesToRadians(coordinates2[0] - coordinates1[0]); // deg2rad below
-  var dLon = degreesToRadians(coordinates2[1] - coordinates1[1]);
-  var a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(degreesToRadians(coordinates1[0])) *
-      Math.cos(degreesToRadians(coordinates2[0])) *
-      Math.sin(dLon / 2) *
-      Math.sin(dLon / 2);
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  var d = R * c; // Distance in km
-  return d;
 }

@@ -1,3 +1,5 @@
+import { createAbortablePromise } from "./create-abortable-promise";
+
 export function createDelayedPromise<T>(
   fn: () => Promise<T>,
   milliseconds: number,
@@ -17,7 +19,12 @@ export function createDelayedPromise<T>(
     }
 
     timeout = setTimeout(() => {
-      fn().then(resolve).catch(reject);
+      (abortController
+        ? createAbortablePromise(() => fn(), abortController)
+        : fn()
+      )
+        .then(resolve)
+        .catch(reject);
     }, milliseconds);
   });
 }

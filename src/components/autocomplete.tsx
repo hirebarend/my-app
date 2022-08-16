@@ -1,28 +1,5 @@
 import React, { MutableRefObject, useEffect, useRef, useState } from "react";
-
-function createDelayedPromise<T>(
-  fn: () => Promise<T>,
-  milliseconds: number,
-  abortController: AbortController | null = null
-): Promise<T> {
-  return new Promise((resolve: (value: T) => void, reject) => {
-    let timeout: NodeJS.Timeout | null = null;
-
-    if (abortController) {
-      abortController.signal.addEventListener("abort", () => {
-        if (timeout) {
-          clearTimeout(timeout);
-        }
-
-        reject(new Error("abort"));
-      });
-    }
-
-    timeout = setTimeout(() => {
-      fn().then(resolve).catch(reject);
-    }, milliseconds);
-  });
-}
+import { createDelayedPromise } from "../functions";
 
 function useOutsideAlerter(
   mutableObjectRef: MutableRefObject<any>,
@@ -48,7 +25,7 @@ function useOutsideAlerter(
 
 export function Autocomplete(props: {
   loadAsync: (value: string) => Promise<Array<string>>;
-  onChange: (value: string) => void;
+  onChange: (value: string, isSelection: boolean) => void;
   value: string;
 }) {
   const mutableObjectRef = useRef(null);
@@ -115,7 +92,7 @@ export function Autocomplete(props: {
         className={`appearance-none bg-slate-50 focus:outline-none px-4 py-2 ${
           state.items.length ? "rounded-t-lg" : "rounded-lg"
         } text-black w-full`}
-        onChange={(event) => props.onChange(event.target.value)}
+        onChange={(event) => props.onChange(event.target.value, false)}
         onFocus={() =>
           setState((state) => {
             return {
@@ -139,7 +116,7 @@ export function Autocomplete(props: {
                   items: [],
                 });
 
-                props.onChange(x);
+                props.onChange(x, true);
               }}
               key={x}
             >
