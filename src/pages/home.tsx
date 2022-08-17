@@ -20,7 +20,7 @@ const createFindViewModelFn = () => {
 
     return await createDelayedPromise(
       () => findViewModel(address),
-      1000,
+      500,
       abortController
     );
   };
