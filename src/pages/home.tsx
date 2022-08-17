@@ -1,4 +1,3 @@
-import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCircleCheck,
@@ -7,27 +6,7 @@ import {
 import { Autocomplete } from "../components";
 import { useEffect, useState } from "react";
 import { createDelayedPromise } from "../functions";
-import { findViewModel } from "../api";
-
-async function loadAsync(address: string): Promise<Array<string>> {
-  const response = await axios.post<{
-    predictions: Array<{ description: string }>;
-  }>("https://startup-55-function-app.azurewebsites.net/api/v1/cors", {
-    config: {
-      params: {
-        input: address,
-        key: "AIzaSyA6WNw8PYvsig9g-I0j6_tEuegSiPUZfuE",
-        location: "-33.9142688,18.0956051",
-        radius: "50000",
-        strictbounds: "true",
-      },
-    },
-    method: "GET",
-    url: "https://maps.googleapis.com/maps/api/place/autocomplete/json",
-  });
-
-  return response.data.predictions.map((x) => x.description);
-}
+import { findAddresses, findViewModel } from "../api";
 
 const createFindViewModelFn = () => {
   let abortController: AbortController | null = null;
@@ -49,7 +28,7 @@ const createFindViewModelFn = () => {
 
 const findViewModelFn = createFindViewModelFn();
 
-const createLoadAsyncFn = () => {
+const createFindAddressesFn = () => {
   let abortController: AbortController | null = null;
 
   return async (address: string) => {
@@ -59,11 +38,15 @@ const createLoadAsyncFn = () => {
 
     abortController = new AbortController();
 
-    return await createDelayedPromise(() => loadAsync(address), 1000);
+    return await createDelayedPromise(
+      () => findAddresses(address),
+      1000,
+      abortController
+    );
   };
 };
 
-const loadAsyncFn = createLoadAsyncFn();
+const findAddressesFn = createFindAddressesFn();
 
 export function Home() {
   const [viewModel, setViewModel] = useState(
@@ -104,7 +87,7 @@ export function Home() {
       <div className="font-bold mb-4 text-4xl">Gas Find</div>
 
       <Autocomplete
-        loadAsync={loadAsyncFn}
+        loadAsync={findAddressesFn}
         onChange={handleOnChangeAutocomplete}
         value={value}
       />

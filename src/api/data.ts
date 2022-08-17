@@ -70,4 +70,34 @@ export const DATA: Array<{
     inStock: true,
     name: "Shell",
   },
+  {
+    address: "127 Jan Smuts St, Cape Town City Centre",
+    coordinates: [-33.92137, 18.43135],
+    inStock: true,
+    name: "Shell",
+  },
+  {
+    address: "61 Kloof St, Gardens",
+    coordinates: [-33.92955, 18.41123],
+    inStock: true,
+    name: "Engen",
+  },
+  {
+    address: "2 Russell St, Foreshore",
+    coordinates: [-33.92694, 18.43531],
+    inStock: true,
+    name: "Caltex",
+  },
+  {
+    address: "92 Sir Lowry Rd, District Six",
+    coordinates: [-33.92753, 18.43312],
+    inStock: true,
+    name: "Caltex",
+  },
+  {
+    address: "130 Albert Rd, Woodstock",
+    coordinates: [-33.927, 18.44965],
+    inStock: true,
+    name: "TotalEngergies",
+  },
 ];
