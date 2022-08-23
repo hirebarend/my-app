@@ -1,4 +1,4 @@
-import axios from "axios";
+import { AxiosWildcardCors } from "./axios-wildcard-cors";
 import { calculateHaversineDistance } from "../functions";
 import { DATA } from "./data";
 
@@ -12,17 +12,13 @@ export async function findViewModel(address: string): Promise<{
     name: string;
   }>;
 } | null> {
-  const response = await axios.post<{
+  const response = await AxiosWildcardCors.get<{
     results: Array<{ geometry: { location: { lat: number; lng: number } } }>;
-  }>("https://startup-55-function-app.azurewebsites.net/api/v1/cors", {
-    config: {
-      params: {
-        address,
-        key: "AIzaSyA6WNw8PYvsig9g-I0j6_tEuegSiPUZfuE",
-      },
+  }>("https://maps.googleapis.com/maps/api/geocode/json", {
+    params: {
+      address,
+      key: "AIzaSyA6WNw8PYvsig9g-I0j6_tEuegSiPUZfuE",
     },
-    method: "GET",
-    url: "https://maps.googleapis.com/maps/api/geocode/json",
   });
 
   if (!response.data.results.length) {

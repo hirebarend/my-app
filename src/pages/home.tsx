@@ -2,10 +2,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCircleCheck,
   faCircleXmark,
+  faLocationPin,
 } from "@fortawesome/free-solid-svg-icons";
 import { Autocomplete } from "../components";
 import { useEffect, useState } from "react";
-import { createDelayedPromise } from "../functions";
+import {
+  calculateHaversineDistance,
+  createDelayedPromise,
+  humanizeDistance,
+} from "../functions";
 import { findAddresses, findViewModel } from "../api";
 
 const createFindViewModelFn = () => {
@@ -99,64 +104,47 @@ export function Home() {
         </div>
       ) : null}
 
-      {chunks(viewModel?.items || [], 2)?.map((x, index1) => (
-        <div className="gap-4 grid grid-cols-2 mt-4" key={`index1-${index1}`}>
-          {x.map((y, index2) => (
-            <div key={`index2-${index2}`}>
-              {/* <img
-                alt=""
-                className="rounded-lg w-full"
-                src="/images/image.jpg"
-              /> */}
-              <div
-                className="bg-gray-200 rounded-lg"
-                style={{ height: "90px" }}
-              ></div>
-              <div className="font-medium mt-2 text-lg">{y.name}</div>
-              <div className="text-sm text-gray-500" style={{ height: "50px" }}>
-                {y.address}
-              </div>
+      <button className="bg-malachite font-medium mt-4 p-2 rounded-lg text-base text-white w-full">
+        Order Gas Cylinder
+      </button>
 
-              <div className="text-sm text-gray-500">
-                <FontAwesomeIcon
-                  className={y.inStock ? "text-malachite" : "text-rosso-corsa"}
-                  icon={y.inStock ? faCircleCheck : faCircleXmark}
-                />
-                &nbsp;{y.inStock ? "In Stock" : "Out of Stock"}
+      <div className="mt-4">
+        {viewModel?.items.map((x, index) => (
+          <div className="grid grid-cols-12 my-4" key={`index2-${index}`}>
+            <div
+              className="bg-gray-200 col-span-3 rounded-lg"
+              style={{ height: "75px" }}
+            ></div>
+            <div className="col-span-9 flex flex-col justify-between pl-2">
+              <div className="font-medium text-lg">{x.name}</div>
+
+              <div className="flex justify-between text-sm text-gray-500">
+                <div>
+                  <FontAwesomeIcon
+                    className={
+                      x.inStock ? "text-malachite" : "text-rosso-corsa"
+                    }
+                    icon={x.inStock ? faCircleCheck : faCircleXmark}
+                  />
+                  &nbsp;{x.inStock ? "In Stock" : "Out of Stock"}
+                </div>
+                <div>
+                  <FontAwesomeIcon icon={faLocationPin} />
+                  &nbsp;
+                  {viewModel
+                    ? `${humanizeDistance(
+                        calculateHaversineDistance(
+                          viewModel.coordinates,
+                          x.coordinates
+                        )
+                      )}`
+                    : "Unknown"}
+                </div>
               </div>
             </div>
-          ))}
-        </div>
-      ))}
-
-      {/* <button className="bg-black-olive p-2.5 rounded-full text-2xl text-white w-full">
-        Allow Location
-      </button> */}
+          </div>
+        ))}
+      </div>
     </div>
   );
-}
-
-function chunks<T>(
-  array: Array<T> | null,
-  n: number | null
-): Array<Array<T>> | null {
-  if (!array) {
-    return null;
-  }
-
-  if (!n) {
-    return null;
-  }
-
-  return array.reduce((array, item, index) => {
-    const chunkIndex: number = Math.floor(index / n);
-
-    if (!array[chunkIndex]) {
-      array[chunkIndex] = [];
-    }
-
-    array[chunkIndex].push(item);
-
-    return array;
-  }, [] as Array<Array<T>>);
 }

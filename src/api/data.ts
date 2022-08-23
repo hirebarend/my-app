@@ -100,4 +100,52 @@ export const DATA: Array<{
     inStock: true,
     name: "TotalEngergies",
   },
+  {
+    address: "2 Blaauwberg Rd, Table View",
+    coordinates: [-33.82214, 18.47731],
+    inStock: true,
+    name: "TotalEngergies",
+  },
+  {
+    address: "Blaauwberg Rd, Raats Dr, Cape Town, 7441",
+    coordinates: [-33.824286, 18.490336],
+    inStock: true,
+    name: "BP",
+  },
+  {
+    address: "2 Pentz Dr, Table View, Cape Town, 7441",
+    coordinates: [-33.825981, 18.48979],
+    inStock: true,
+    name: "Engen",
+  },
+  {
+    address: "Blaauwberg Road, Study St, Cape Town, 7441",
+    coordinates: [-33.830079, 18.507463],
+    inStock: true,
+    name: "Shell",
+  },
+  {
+    address: "Boy De Goede Cir, Table View, Cape Town, 7441",
+    coordinates: [-33.832715, 18.515695],
+    inStock: true,
+    name: "Engen",
+  },
+  {
+    address: "Cnr Koeberg and Blaauberg Road, Chempet, Milnerton",
+    coordinates: [-33.835822, 18.525974],
+    inStock: true,
+    name: "Caltex",
+  },
+  {
+    address: "Cnr Raats & Parklands Main Rd, Parklands",
+    coordinates: [-33.819201, 18.496027],
+    inStock: true,
+    name: "Sasol",
+  },
+  {
+    address: "2 Link Rd, Milnerton, Cape Town, 7441",
+    coordinates: [-33.815555, 18.490378],
+    inStock: true,
+    name: "BP",
+  },
 ];
