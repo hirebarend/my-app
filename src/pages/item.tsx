@@ -39,6 +39,25 @@ export function Item() {
         <div className="text-gray-500">{item.address}</div>
       </div>
 
+      <img
+        alt="Filling Station"
+        className="rounded-lg shadow"
+        src="/images/lily-banse-A0vexBVer0I-unsplash.jpg"
+      />
+
+      <div className="gap-2 grid grid-cols-2">
+        <div>
+          <button className="bg-slate-500 font-medium mt-4 p-2 rounded-lg text-base text-white w-full">
+            Out of Stock
+          </button>
+        </div>
+        <div>
+          <button className="bg-slate-500 font-medium mt-4 p-2 rounded-lg text-base text-white w-full">
+            In Stock
+          </button>
+        </div>
+      </div>
+
       <div className="bg-gray-50 flex justify-between mt-4 p-4 rounded">
         <div>
           <FontAwesomeIcon
