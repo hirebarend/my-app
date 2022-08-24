@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import { Home } from "./pages";
+import { Home, Item } from "./pages";
 
 function App() {
   return (
@@ -10,6 +10,7 @@ function App() {
         path="/"
       ></Route> */}
       <Route element={<Home />} path="/" />
+      <Route element={<Item />} path="/:slug" />
     </Routes>
   );
 }

@@ -5,12 +5,15 @@ import {
   faLocationPin,
 } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { calculateHaversineDistance, humanizeDistance } from "../functions";
 import { DATA } from "../api";
 import { useGeolocation } from "../hooks";
 
 export function Home() {
   const { geolocationPosition } = useGeolocation();
+
+  const navigate = useNavigate();
 
   const [items, setItems] = useState(
     null as Array<{
@@ -63,7 +66,11 @@ export function Home() {
 
       <div className="mt-4">
         {items?.map((x, index) => (
-          <div className="my-4" key={`index-${index}`}>
+          <div
+            className="my-4"
+            key={`index-${index}`}
+            onClick={() => navigate("/test")}
+          >
             <div className="font-medium text-lg">{x.name}</div>
             <div className="text-sm text-gray-500">{x.address}</div>
 
