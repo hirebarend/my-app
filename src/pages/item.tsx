@@ -5,12 +5,15 @@ import {
   faLocationPin,
 } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { calculateHaversineDistance, humanizeDistance } from "../functions";
 import { DATA } from "../api";
 import { useGeolocation } from "../hooks";
 
 export function Item() {
   const { geolocationPosition } = useGeolocation();
+
+  const navigate = useNavigate();
 
   const [item, setItem] = useState(
     null as {
@@ -65,7 +68,10 @@ export function Item() {
         Order a Gas Cylinder
       </button>
 
-      <button className="bg-white border border-primary font-medium mt-4 p-2 rounded-lg text-base text-primary w-full">
+      <button
+        className="bg-white border border-primary font-medium mt-4 p-2 rounded-lg text-base text-primary w-full"
+        onClick={() => navigate("/")}
+      >
         Back to Home
       </button>
     </div>
