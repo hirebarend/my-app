@@ -5,13 +5,21 @@ import {
   faLocationPin,
 } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
+import { useMutation } from "react-query";
 import { useNavigate, useParams } from "react-router-dom";
+import { createReport, findItem } from "../api";
 import { calculateHaversineDistance, humanizeDistance } from "../functions";
-import { findItem } from "../api";
-import { useGeolocation } from "../hooks";
+import { useDeviceId, useGeolocation } from "../hooks";
+import { Report } from "../types";
 
 export function Item() {
+  const deviceId = useDeviceId();
+
   const { geolocationPosition } = useGeolocation();
+
+  const useMutationResult = useMutation([], async (report: Report) => {
+    await createReport(report);
+  });
 
   const navigate = useNavigate();
 
@@ -22,6 +30,8 @@ export function Item() {
       address: string;
       coordinates: [number, number];
       inStock: boolean;
+      isStockist: boolean;
+      reference: string;
       name: string;
     } | null
   );
@@ -34,7 +44,7 @@ export function Item() {
     findItem(params.reference).then((item) => setItem(item));
   }, [params]);
 
-  if (!item) {
+  if (!geolocationPosition || !item) {
     return <></>;
   }
 
@@ -94,7 +104,30 @@ export function Item() {
         </div>
       </div>
 
-      <button className="bg-primary font-medium mt-4 p-2 rounded-lg text-base text-white w-full">
+      <button
+        className="bg-primary disabled:opacity-75 font-medium mt-4 p-2 rounded-lg text-base text-white w-full"
+        disabled={useMutationResult.isLoading}
+        onClick={() =>
+          useMutationResult.mutate({
+            coordinates: {
+              latitude: geolocationPosition.coords.latitude,
+              longitude: geolocationPosition.coords.longitude,
+            },
+            deviceId,
+            isFraudulent:
+              calculateHaversineDistance(
+                [
+                  geolocationPosition.coords.latitude,
+                  geolocationPosition.coords.longitude,
+                ],
+                item.coordinates
+              ) > 0.5,
+            reference: item.reference,
+            status: "Out of Stock",
+            timestamp: new Date().getTime(),
+          })
+        }
+      >
         Report Out of Stock
       </button>
 

@@ -1,4 +1,4 @@
-import { DATA } from "./data";
+import { findItems } from "./find-items";
 
 export async function findItem(reference: string): Promise<{
   address: string;
@@ -8,7 +8,9 @@ export async function findItem(reference: string): Promise<{
   reference: string;
   name: string;
 }> {
-  const item = DATA.find((x) => x.reference === reference);
+  const items = await findItems(null);
+
+  const item = items.find((x) => x.reference === reference);
 
   if (!item) {
     throw new Error();

@@ -72,13 +72,13 @@ export function Tracking() {
       </div>
 
       <button
+        className="bg-primary disabled:opacity-75 font-medium mt-4 p-2 rounded-lg text-base text-white w-full"
         disabled={
           geolocationPosition.coords.accuracy > 15 ||
           (geolocationPosition.coords.speed &&
             geolocationPosition.coords.speed > 1.5) ||
           useMutationResult.isLoading
         }
-        className="bg-primary disabled:opacity-75 font-medium mt-4 p-2 rounded-lg text-base text-white w-full"
         onClick={() =>
           useMutationResult.mutate({
             latitude: geolocationPosition.coords.latitude,

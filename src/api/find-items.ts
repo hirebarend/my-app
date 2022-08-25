@@ -1,6 +1,7 @@
 import { calculateHaversineDistance } from "../functions";
-import { Coordinates } from "../types";
+import { Coordinates, Report } from "../types";
 import { DATA } from "./data";
+import { findReportsOutOfStock } from "./find-reports";
 
 export async function findItems(coordinates: Coordinates | null): Promise<
   Array<{
@@ -12,11 +13,29 @@ export async function findItems(coordinates: Coordinates | null): Promise<
     name: string;
   }>
 > {
+  const reports: Array<Report> = await findReportsOutOfStock(null);
+
   if (!coordinates) {
-    return DATA;
+    return DATA.map((x) => {
+      return {
+        ...x,
+        inStock:
+          reports.filter((y) => y.reference === x.reference).length > 5
+            ? false
+            : x.inStock,
+      };
+    });
   }
 
-  return DATA.sort((a, b) => {
+  return DATA.map((x) => {
+    return {
+      ...x,
+      inStock:
+        reports.filter((y) => y.reference === x.reference).length > 5
+          ? false
+          : x.inStock,
+    };
+  }).sort((a, b) => {
     return (
       calculateHaversineDistance(
         [coordinates.latitude, coordinates.longitude],
