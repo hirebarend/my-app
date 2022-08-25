@@ -10,9 +10,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { createReport, findItem } from "../api";
 import { calculateHaversineDistance, humanizeDistance } from "../functions";
 import { useDeviceId, useGeolocation } from "../hooks";
-import { Report } from "../types";
+import { Item, Report } from "../types";
 
-export function Item() {
+export function ItemPage() {
   const deviceId = useDeviceId();
 
   const { geolocationPosition } = useGeolocation();
@@ -25,16 +25,7 @@ export function Item() {
 
   const params = useParams();
 
-  const [item, setItem] = useState(
-    null as {
-      address: string;
-      coordinates: [number, number];
-      inStock: boolean;
-      isStockist: boolean;
-      reference: string;
-      name: string;
-    } | null
-  );
+  const [item, setItem] = useState(null as Item | null);
 
   useEffect(() => {
     if (!params.reference) {
@@ -83,7 +74,7 @@ export function Item() {
                       geolocationPosition.coords.latitude,
                       geolocationPosition.coords.longitude,
                     ],
-                    item.coordinates
+                    [item.coordinates.latitude, item.coordinates.longitude]
                   )
                 )}`
               : "Unknown"}
@@ -120,7 +111,7 @@ export function Item() {
                   geolocationPosition.coords.latitude,
                   geolocationPosition.coords.longitude,
                 ],
-                item.coordinates
+                [item.coordinates.latitude, item.coordinates.longitude]
               ) > 0.5,
             reference: item.reference,
             status: "Out of Stock",

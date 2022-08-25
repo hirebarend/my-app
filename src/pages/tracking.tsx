@@ -4,7 +4,7 @@ import * as uuid from "uuid";
 import { useGeolocation } from "../hooks";
 import { Coordinates } from "../types";
 
-export function Tracking() {
+export function TrackingPage() {
   const { geolocationPosition } = useGeolocation();
 
   const useMutationResult = useMutation(

@@ -1,17 +1,13 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import { Home, Item, Tracking } from "./pages";
+import { HomePage, ItemPage, TrackingPage } from "./pages";
 
 function App() {
   return (
     <Routes>
-      {/* <Route
-        element={<Navigate replace to="/allow-location" />}
-        path="/"
-      ></Route> */}
-      <Route element={<Home />} path="/" />
-      <Route element={<Tracking />} path="/tracking" />
-      <Route element={<Item />} path="/:reference" />
+      <Route element={<HomePage />} path="/" />
+      <Route element={<TrackingPage />} path="/tracking" />
+      <Route element={<ItemPage />} path="/:reference" />
     </Routes>
   );
 }

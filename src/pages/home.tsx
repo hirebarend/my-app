@@ -9,22 +9,14 @@ import { useNavigate } from "react-router-dom";
 import { calculateHaversineDistance, humanizeDistance } from "../functions";
 import { findItems } from "../api";
 import { useGeolocation } from "../hooks";
+import { Item } from "../types";
 
-export function Home() {
+export function HomePage() {
   const { geolocationPosition } = useGeolocation();
 
   const navigate = useNavigate();
 
-  const [items, setItems] = useState(
-    null as Array<{
-      address: string;
-      coordinates: [number, number];
-      inStock: boolean;
-      isStockist: boolean;
-      reference: string;
-      name: string;
-    }> | null
-  );
+  const [items, setItems] = useState(null as Array<Item> | null);
 
   useEffect(() => {
     findItems(
@@ -81,7 +73,7 @@ export function Home() {
                           geolocationPosition.coords.latitude,
                           geolocationPosition.coords.longitude,
                         ],
-                        x.coordinates
+                        [x.coordinates.latitude, x.coordinates.longitude]
                       )
                     )}`
                   : "Unknown"}
