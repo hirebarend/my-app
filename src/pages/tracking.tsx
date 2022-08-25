@@ -18,6 +18,7 @@ export function Tracking() {
               fields: {
                 ID: uuid.v4(),
                 Latitude: coordinates.latitude,
+                Location: `${coordinates.latitude}, ${coordinates.longitude}`,
                 Longitude: coordinates.longitude,
               },
             },
