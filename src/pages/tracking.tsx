@@ -1,13 +1,13 @@
-import { useMutation } from "react-query";
+// import { useMutation } from "react-query";
 import { useGeolocation } from "../hooks";
-import { Coordinates } from "../types";
+// import { Coordinates } from "../types";
 
 export function Tracking() {
   const { geolocationPosition } = useGeolocation();
 
-  const useMutationResult = useMutation([], async (coordinates: Coordinates) =>
-    Promise.resolve(true)
-  );
+  // const useMutationResult = useMutation([], async (coordinates: Coordinates) =>
+  //   Promise.resolve(true)
+  // );
 
   if (!geolocationPosition) {
     return <></>;
