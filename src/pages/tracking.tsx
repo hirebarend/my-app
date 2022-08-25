@@ -48,10 +48,16 @@ export function Tracking() {
           m
         </div>
         <div className="text-gray-500 text-base">
-          Latitude: {geolocationPosition.coords.latitude}
+          Latitude:{" "}
+          {new Intl.NumberFormat("en-ZA", {
+            maximumFractionDigits: 4,
+          }).format(geolocationPosition.coords.latitude)}
         </div>
         <div className="text-gray-500 text-base">
-          Longitude: {geolocationPosition.coords.longitude}
+          Longitude:{" "}
+          {new Intl.NumberFormat("en-ZA", {
+            maximumFractionDigits: 4,
+          }).format(geolocationPosition.coords.longitude)}
         </div>
         <div className="text-gray-500 text-base">
           Speed:{" "}
@@ -66,7 +72,7 @@ export function Tracking() {
 
       <button
         disabled={
-          geolocationPosition.coords.accuracy > 10 ||
+          geolocationPosition.coords.accuracy > 15 ||
           useMutationResult.isLoading
         }
         className="bg-primary disabled:opacity-75 font-medium mt-4 p-2 rounded-lg text-base text-white w-full"
