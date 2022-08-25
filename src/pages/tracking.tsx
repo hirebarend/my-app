@@ -11,14 +11,14 @@ export function TrackingPage() {
     [],
     async (coordinates: Coordinates) => {
       await axios.post(
-        "https://api.airtable.com/v0/appGhvX68c1Mnl86W/Gas%20Find",
+        "https://api.airtable.com/v0/appFNAlw9RqgkUnZl/Tracking",
         {
           records: [
             {
               fields: {
                 ID: uuid.v4(),
                 Latitude: coordinates.latitude,
-                Location: `${coordinates.latitude}, ${coordinates.longitude}`,
+                Location: `${coordinates.latitude},${coordinates.longitude}`,
                 Longitude: coordinates.longitude,
               },
             },
