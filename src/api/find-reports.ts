@@ -11,7 +11,7 @@ export async function findReportsOutOfStock(
       Authorization: `Bearer keywUEWZniOrHqDgC`,
     },
     params: {
-      filterByFormula: "Status='Out of Stock'",
+      filterByFormula: "AND({Status}='Out of Stock', {Is Fraudulent}=FALSE())",
     },
   });
 
