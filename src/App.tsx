@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import { Home, Item } from "./pages";
+import { Home, Item, Tracking } from "./pages";
 
 function App() {
   return (
@@ -10,7 +10,8 @@ function App() {
         path="/"
       ></Route> */}
       <Route element={<Home />} path="/" />
-      <Route element={<Item />} path="/:slug" />
+      <Route element={<Tracking />} path="/tracking" />
+      <Route element={<Item />} path="/:reference" />
     </Routes>
   );
 }

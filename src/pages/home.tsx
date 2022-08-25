@@ -7,7 +7,7 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { calculateHaversineDistance, humanizeDistance } from "../functions";
-import { DATA } from "../api";
+import { findItems } from "../api";
 import { useGeolocation } from "../hooks";
 
 export function Home() {
@@ -20,35 +20,21 @@ export function Home() {
       address: string;
       coordinates: [number, number];
       inStock: boolean;
+      isStockist: boolean;
+      reference: string;
       name: string;
     }> | null
   );
 
   useEffect(() => {
-    if (geolocationPosition) {
-      setItems(
-        DATA.sort((a, b) => {
-          return (
-            calculateHaversineDistance(
-              [
-                geolocationPosition.coords.latitude,
-                geolocationPosition.coords.longitude,
-              ],
-              a.coordinates
-            ) -
-            calculateHaversineDistance(
-              [
-                geolocationPosition.coords.latitude,
-                geolocationPosition.coords.longitude,
-              ],
-              b.coordinates
-            )
-          );
-        })
-      );
-    } else {
-      setItems(DATA);
-    }
+    findItems(
+      geolocationPosition
+        ? {
+            latitude: geolocationPosition.coords.latitude,
+            longitude: geolocationPosition.coords.longitude,
+          }
+        : null
+    ).then((x) => setItems(x));
   }, [geolocationPosition]);
 
   return (
@@ -69,7 +55,7 @@ export function Home() {
           <div
             className="my-4"
             key={`index-${index}`}
-            onClick={() => navigate("/test")}
+            onClick={() => navigate(`/${x.reference}`)}
           >
             <div className="font-medium text-lg">{x.name}</div>
             <div className="text-sm text-gray-500">{x.address}</div>
