@@ -123,6 +123,33 @@ export function ItemPage() {
       </button>
 
       <button
+        className="bg-primary disabled:opacity-75 font-medium mt-4 p-2 rounded-lg text-base text-white w-full"
+        disabled={useMutationResult.isLoading}
+        onClick={() =>
+          useMutationResult.mutate({
+            coordinates: {
+              latitude: geolocationPosition.coords.latitude,
+              longitude: geolocationPosition.coords.longitude,
+            },
+            deviceId,
+            isFraudulent:
+              calculateHaversineDistance(
+                [
+                  geolocationPosition.coords.latitude,
+                  geolocationPosition.coords.longitude,
+                ],
+                [item.coordinates.latitude, item.coordinates.longitude]
+              ) > 0.5,
+            reference: item.reference,
+            status: "Out of Stock",
+            timestamp: new Date().getTime(),
+          })
+        }
+      >
+        Report Out of Stock
+      </button>
+
+      <button
         className="font-medium mt-4 p-2 text-base text-secondary w-full"
         onClick={() => navigate("/")}
       >
