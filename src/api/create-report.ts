@@ -1,4 +1,5 @@
 import axios from "axios";
+import  moment from 'moment';
 import * as uuid from "uuid";
 import { Report } from "../types";
 
@@ -15,7 +16,7 @@ export async function createReport(report: Report): Promise<Report> {
             "Is Fraudulent": report.isFraudulent,
             Reference: report.reference,
             Status: report.status,
-            Timestamp: "2022-08-04",
+            Timestamp: moment().format("YYYY-MM-DD"),
           },
         },
       ],
