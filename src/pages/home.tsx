@@ -38,8 +38,11 @@ export function HomePage() {
         <div>Gas Find</div>
       </div>
 
-      <button className="bg-primary font-medium mt-4 p-2 rounded-lg text-base text-white w-full">
-        Order a Gas Cylinder
+      <button
+        className="bg-primary font-medium mt-4 p-2 rounded-lg text-base text-white w-full"
+        onClick={() => window.open("https://forms.jurnoo.com/y50cx3", "_blank")}
+      >
+        Order a gas cylinder
       </button>
 
       <div className="mt-4">
@@ -58,7 +61,7 @@ export function HomePage() {
                   className={x.inStock ? "text-primary" : "text-gray-500"}
                   icon={x.inStock ? faCircleCheck : faCircleXmark}
                 />
-                &nbsp;{x.inStock ? "In Stock" : "Out of Stock"}
+                &nbsp;{x.inStock ? "In stock" : "Out of stock"}
               </div>
               <div>
                 <FontAwesomeIcon

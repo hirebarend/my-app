@@ -55,12 +55,12 @@ export function ItemPage() {
       <div className="bg-gray-50 flex justify-between mt-4 p-4 rounded text-base">
         <div>
           <FontAwesomeIcon
-            className={item.inStock ? "text-primary" : "text-secondary"}
+            className={item.inStock ? "text-primary" : "text-gray-500"}
             icon={item.inStock ? faCircleCheck : faCircleXmark}
           />
           &nbsp;
           <span className="font-medium">
-            {item.inStock ? "In Stock" : "Out of Stock"}
+            {item.inStock ? "In stock" : "Out of stock"}
           </span>
         </div>
         <div>
@@ -84,7 +84,15 @@ export function ItemPage() {
 
       <div className="gap-2 grid grid-cols-2">
         <div>
-          <button className="bg-white border border-secondary font-medium mt-4 p-2 rounded-lg text-base text-secondary w-full">
+          <button
+            className="bg-white border border-secondary font-medium mt-4 p-2 rounded-lg text-base text-secondary w-full"
+            onClick={() =>
+              window.open(
+                `http://maps.google.co.za/maps?q=${item.coordinates.latitude},${item.coordinates.longitude}`,
+                "_blank"
+              )
+            }
+          >
             Directions
           </button>
         </div>
@@ -96,7 +104,7 @@ export function ItemPage() {
       </div>
 
       <button
-        className="bg-primary disabled:opacity-75 font-medium mt-4 p-2 rounded-lg text-base text-white w-full"
+        className="bg-secondary disabled:opacity-50 font-medium mt-4 p-2 rounded-lg text-base text-white w-full"
         disabled={useMutationResult.isLoading}
         onClick={() =>
           useMutationResult.mutate({
@@ -114,16 +122,16 @@ export function ItemPage() {
                 [item.coordinates.latitude, item.coordinates.longitude]
               ) > 0.5,
             reference: item.reference,
-            status: "Out of Stock",
+            status: "In Stock",
             timestamp: new Date().getTime(),
           })
         }
       >
-        Report Out of Stock
+        In stock
       </button>
 
       <button
-        className="bg-primary disabled:opacity-75 font-medium mt-4 p-2 rounded-lg text-base text-white w-full"
+        className="bg-primary disabled:opacity-50 font-medium mt-4 p-2 rounded-lg text-base text-white w-full"
         disabled={useMutationResult.isLoading}
         onClick={() =>
           useMutationResult.mutate({
@@ -146,14 +154,14 @@ export function ItemPage() {
           })
         }
       >
-        Report Out of Stock
+        Out of stock
       </button>
 
       <button
         className="font-medium mt-4 p-2 text-base text-secondary w-full"
         onClick={() => navigate("/")}
       >
-        Back to Home
+        Back to home
       </button>
     </div>
   );
