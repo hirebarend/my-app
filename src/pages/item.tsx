@@ -103,59 +103,69 @@ export function ItemPage() {
         </div>
       </div>
 
-      <button
-        className="bg-secondary disabled:opacity-50 font-medium mt-4 p-2 rounded-lg text-base text-white w-full"
-        disabled={useMutationResult.isLoading}
-        onClick={() =>
-          useMutationResult.mutate({
-            coordinates: {
-              latitude: geolocationPosition.coords.latitude,
-              longitude: geolocationPosition.coords.longitude,
-            },
-            deviceId,
-            isFraudulent:
-              calculateHaversineDistance(
-                [
-                  geolocationPosition.coords.latitude,
-                  geolocationPosition.coords.longitude,
-                ],
-                [item.coordinates.latitude, item.coordinates.longitude]
-              ) > 0.5,
-            reference: item.reference,
-            status: "In Stock",
-            timestamp: new Date().getTime(),
-          })
-        }
-      >
-        In stock
-      </button>
+      <p className="mt-4">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
+        tincidunt nibh ut sagittis pulvinar.
+      </p>
 
-      <button
-        className="bg-primary disabled:opacity-50 font-medium mt-4 p-2 rounded-lg text-base text-white w-full"
-        disabled={useMutationResult.isLoading}
-        onClick={() =>
-          useMutationResult.mutate({
-            coordinates: {
-              latitude: geolocationPosition.coords.latitude,
-              longitude: geolocationPosition.coords.longitude,
-            },
-            deviceId,
-            isFraudulent:
-              calculateHaversineDistance(
-                [
-                  geolocationPosition.coords.latitude,
-                  geolocationPosition.coords.longitude,
-                ],
-                [item.coordinates.latitude, item.coordinates.longitude]
-              ) > 0.5,
-            reference: item.reference,
-            status: "Out of Stock",
-            timestamp: new Date().getTime(),
-          })
-        }
-      >
-        Out of stock
-      </button>
+      <div className="gap-2 grid grid-cols-2">
+        <div>
+          <button
+            className="bg-secondary disabled:opacity-50 font-medium mt-4 p-2 rounded-lg text-base text-white w-full"
+            disabled={useMutationResult.isLoading}
+            onClick={() =>
+              useMutationResult.mutate({
+                coordinates: {
+                  latitude: geolocationPosition.coords.latitude,
+                  longitude: geolocationPosition.coords.longitude,
+                },
+                deviceId,
+                isFraudulent:
+                  calculateHaversineDistance(
+                    [
+                      geolocationPosition.coords.latitude,
+                      geolocationPosition.coords.longitude,
+                    ],
+                    [item.coordinates.latitude, item.coordinates.longitude]
+                  ) > 0.5,
+                reference: item.reference,
+                status: "In Stock",
+                timestamp: new Date().getTime(),
+              })
+            }
+          >
+            In stock
+          </button>
+        </div>
+        <div>
+          <button
+            className="bg-primary disabled:opacity-50 font-medium mt-4 p-2 rounded-lg text-base text-white w-full"
+            disabled={useMutationResult.isLoading}
+            onClick={() =>
+              useMutationResult.mutate({
+                coordinates: {
+                  latitude: geolocationPosition.coords.latitude,
+                  longitude: geolocationPosition.coords.longitude,
+                },
+                deviceId,
+                isFraudulent:
+                  calculateHaversineDistance(
+                    [
+                      geolocationPosition.coords.latitude,
+                      geolocationPosition.coords.longitude,
+                    ],
+                    [item.coordinates.latitude, item.coordinates.longitude]
+                  ) > 0.5,
+                reference: item.reference,
+                status: "Out of Stock",
+                timestamp: new Date().getTime(),
+              })
+            }
+          >
+            Out of stock
+          </button>
+        </div>
+      </div>
 
       <button
         className="font-medium mt-4 p-2 text-base text-secondary w-full"
