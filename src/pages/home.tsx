@@ -40,7 +40,7 @@ export function HomePage() {
 
       <button
         className="bg-primary font-medium mt-4 p-2 rounded-lg text-base text-white w-full"
-        onClick={() => window.open("https://forms.jurnoo.com/y50cx3", "_blank")}
+        onClick={() => window.open("https://nanoforms.io/y50cx3", "_blank")}
       >
         Order a gas cylinder
       </button>

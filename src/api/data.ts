@@ -40,7 +40,7 @@ export const DATA: Array<Item> = [
   {
     address: "2A Rontree Ave, Bakoven, Cape Town, 8005",
     contactNumber: "0766542813",
-    coordinates: [-33.96346, 18.37976],
+    coordinates: [-33.96365177820806, 18.379587912949155], // DONE
     inStock: false,
     isStockist: false,
     name: "Caltex",
