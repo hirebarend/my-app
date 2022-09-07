@@ -227,6 +227,42 @@ export const DATA: Array<Item> = [
     name: "Caltex",
     reference: "e7guf3",
   },
+  {
+    address: "Cnr Otto Du Plessis Dr & Ocean Way Sunset Beach, Milnerton, 7441",
+    contactNumber: "0766542813",
+    coordinates: [-33.85486666835399, 18.495930813711446], // DONE
+    inStock: false,
+    isStockist: false,
+    name: "Engen",
+    reference: "h0up70",
+  },
+  {
+    address: "1 Section St, Paarden Eiland, Cape Town, 7405",
+    contactNumber: "0766542813",
+    coordinates: [-33.91080927991432, 18.470214074996395], // DONE
+    inStock: false,
+    isStockist: false,
+    name: "TotalEnergies",
+    reference: "6n99wu",
+  },
+  {
+    address: "16 Marine Dr, Paarden Eiland, Cape Town, 7405",
+    contactNumber: "0766542813",
+    coordinates: [-33.91473515051853, 18.465811584270355], // DONE
+    inStock: false,
+    isStockist: false,
+    name: "Shell",
+    reference: "l4bl02",
+  },
+  {
+    address: "27 Annandale St, Gardens, Cape Town, 8001",
+    contactNumber: "0766542813",
+    coordinates: [-33.93302001580901, 18.4149906506566], // DONE
+    inStock: false,
+    isStockist: false,
+    name: "Engen",
+    reference: "j3zb44",
+  },
 ].map((x) => {
   return {
     ...x,
