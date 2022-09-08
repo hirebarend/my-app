@@ -76,9 +76,9 @@ export const DATA: Array<Item> = [
   {
     address: "134 Main Rd, Sea Point, Cape Town, 8005",
     contactNumber: "0766542813",
-    coordinates: [-33.91356, 18.39141],
-    inStock: true,
-    isStockist: true,
+    coordinates: [-33.913500546509404,18.391554839926204], // DONE
+    inStock: false,
+    isStockist: false,
     name: "Engen",
     reference: "w23f8r",
   },
