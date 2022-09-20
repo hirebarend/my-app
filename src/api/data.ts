@@ -49,16 +49,16 @@ export const DATA: Array<Item> = [
   {
     address: "110 Regent Rd, Sea Point, Cape Town, 8060",
     contactNumber: "0766542813",
-    coordinates: [-33.92233, 18.3806],
+    coordinates: [-33.922358206504974, 18.380696335824563], // DONE
     inStock: true,
     isStockist: true,
     name: "BP",
     reference: "8joty8",
   },
   {
-    address: "Main Rd, Sea Point, Cape Town, 8005",
+    address: "166-164 Main Rd, Sea Point, Cape Town, 8060",
     contactNumber: "0766542813",
-    coordinates: [-33.91625, 18.38917],
+    coordinates: [-33.916315818237145, 18.38915166446789], // DONE
     inStock: true,
     isStockist: true,
     name: "Shell",
@@ -76,7 +76,7 @@ export const DATA: Array<Item> = [
   {
     address: "134 Main Rd, Sea Point, Cape Town, 8005",
     contactNumber: "0766542813",
-    coordinates: [-33.913500546509404,18.391554839926204], // DONE
+    coordinates: [-33.913500546509404, 18.391554839926204], // DONE
     inStock: false,
     isStockist: false,
     name: "Engen",
@@ -94,7 +94,7 @@ export const DATA: Array<Item> = [
   {
     address: "Beach Rd, Mouille Point, Cape Town, 8005",
     contactNumber: "0766542813",
-    coordinates: [-33.8994917, 18.4106603],
+    coordinates: [-33.90546971935211, 18.398352898674457], // DONE
     inStock: true,
     isStockist: true,
     name: "Shell",
